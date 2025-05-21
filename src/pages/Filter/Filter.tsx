@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import Cross from '@/assets/Cross.png'
 import styles from '@/pages/Filter/Filter.module.css'
+import rawData from '@/shared/temp/filterData.json'
 import { useFilterModal } from '@/store/store.ts'
 
 export const ModalFilter = () => {
@@ -14,6 +15,8 @@ export const ModalFilter = () => {
 			closeModal()
 		}
 	}
+
+	const data = rawData.filterItems
 
 	return (
 		<div
@@ -32,8 +35,59 @@ export const ModalFilter = () => {
 						}}
 					/>
 				</div>
-				<hr className={'border-t-2 border-gray-500'} />
-				{t('someText')}
+				<div className={'flex flex-col'}>
+					{data.map(item => {
+						return (
+							<div key={item.id}>
+								<hr
+									className={'border-t-2 border-gray-500 pb-8 max-[600px]:pb-3'}
+								/>
+								<h2 className={'mb-24px'}>{t(item.name)}</h2>
+								<div
+									className={
+										'mb-8 flex flex-wrap max-[600px]:flex-col max-[600px]:mb-4'
+									}
+								>
+									{item.options.map(option => {
+										return (
+											<div
+												key={option.id}
+												className={
+													'w-1/3 mb-4 max-[600px]:w-full max-[600px]:mb-2'
+												}
+											>
+												<input
+													className={
+														'w-20px h-20px border-4 border-gray-600 rounded mr-1'
+													}
+													type="checkbox"
+													id={option.id}
+													name={option.name}
+												/>
+												<label htmlFor={option.id}>{option.name}</label>
+											</div>
+										)
+									})}
+								</div>
+							</div>
+						)
+					})}
+				</div>
+				<div className={'flex justify-between items-center pt-4'}>
+					<hr className={'border-t-2 border-gray-500 pb-8'} />
+					<button
+						className={'bg-orange-500 text-white py-2 px-4 rounded'}
+						onClick={() => {}}
+					>
+						{t('Apply')}
+					</button>
+					<span
+						className={'underline text-blue-500 cursor-pointer'}
+						onClick={() => {}}
+					>
+						{t('Clear all parameters')}
+					</span>
+				</div>
 			</div>
 		</div>
 	)

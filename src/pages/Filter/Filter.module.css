@@ -1,4 +1,4 @@
-.modalShadow{
+.modalShadow {
     position: fixed;
     height: 100%;
     width: 100%;
@@ -9,15 +9,34 @@
     left: 0;
 }
 
-.modalBody{
+.modalBody {
     background-color: white;
     color: black;
-    /*width: 80%;*/
     width: calc(100% - 160px);
     max-width: 1280px;
     min-height: 300px;
+    max-height: calc(100% - 80px);
     margin: 50px auto 0;
     border-radius: 15px;
     border: 1px solid gray;
     padding: 40px 34px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .modalBody {
+        width: calc(100% - 40px);
+        padding: 30px 17px;
+        margin: 20px auto 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .modalBody {
+        width: calc(100% - 40px);
+        padding: 20px 17px;
+        margin: 20px auto 0;
+    }
 }
