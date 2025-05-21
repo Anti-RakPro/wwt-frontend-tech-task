@@ -2,44 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
-import Cross from '@/assets/Cross.png'
-import styles from '@/pages/Home/Home.module.css'
+import { ModalFilter } from '@/pages/Filter/Filter'
 import { useFilterModal } from '@/store/store.ts'
 
 const Home = () => {
 	const { t } = useTranslation()
-	const { isOpen, openModal, closeModal } = useFilterModal()
-
-	const modalHandlClick = (e: React.MouseEvent<HTMLDivElement>) => {
-		if (e.target === e.currentTarget) {
-			closeModal()
-		}
-	}
-
-	const ModalWrapper = () => {
-		return (
-			<div
-				className={styles.modalShadow}
-				onClick={modalHandlClick}
-			>
-				<div className={styles.modalBody}>
-					<div className={'flex items-center mb-5'}>
-						<h2 className={'text-center text-4xl mx-auto'}>{t('Filter')}</h2>
-						<img
-							className={'max-w-[20px] max-h-[20px] cursor-pointer m-1'}
-							src={Cross}
-							alt={'Close'}
-							onClick={() => {
-								closeModal()
-							}}
-						/>
-					</div>
-					<hr className={'border-t-2'} />
-					{t('someText')}
-				</div>
-			</div>
-		)
-	}
+	const { isOpen, openModal } = useFilterModal()
 
 	const setOpenHandler = () => {
 		openModal()
@@ -65,11 +33,10 @@ const Home = () => {
 			{isOpen &&
 				document.getElementById('modal-main') !== null &&
 				ReactDOM.createPortal(
-					<ModalWrapper />,
+					<ModalFilter />,
 					document.getElementById('modal-main')!
 				)}
 		</React.Fragment>
 	)
 }
-
 export default Home

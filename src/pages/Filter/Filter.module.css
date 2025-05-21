@@ -12,9 +12,12 @@
 .modalBody{
     background-color: white;
     color: black;
-    width: 80%;
+    /*width: 80%;*/
+    width: calc(100% - 160px);
+    max-width: 1280px;
+    min-height: 300px;
     margin: 50px auto 0;
     border-radius: 15px;
     border: 1px solid gray;
-    padding: 20px 10px;
+    padding: 40px 34px;
 }
