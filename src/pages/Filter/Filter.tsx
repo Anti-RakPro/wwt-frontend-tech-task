@@ -2,21 +2,41 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Cross from '@/assets/Cross.png'
-import styles from '@/pages/Filter/Filter.module.css'
+import styles from '@/pages/Modal.module.css'
 import rawData from '@/shared/temp/filterData.json'
-import { useFilterModal } from '@/store/store.ts'
+import {
+	useFilterModal,
+	useFilterRecheck,
+	useUnAppliedFilterSettings
+} from '@/store/store.ts'
 
 export const ModalFilter = () => {
 	const { t } = useTranslation()
-	const { closeModal } = useFilterModal()
+	const { closeFilterModal } = useFilterModal()
+	const { openFilterRecheck } = useFilterRecheck()
+	const {
+		unAppliedFilterSettings,
+		setUnAppliedFilterSettings,
+		clearUnAppliedFilterSettings
+	} = useUnAppliedFilterSettings()
 
 	const modalHandleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (e.target === e.currentTarget) {
-			closeModal()
+			closeFilterModal()
 		}
 	}
 
 	const data = rawData.filterItems
+
+	const applyHandler = () => {
+		closeFilterModal()
+		openFilterRecheck()
+	}
+
+	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { id, checked } = e.target
+		setUnAppliedFilterSettings(id, checked)
+	}
 
 	return (
 		<div
@@ -31,7 +51,7 @@ export const ModalFilter = () => {
 						src={Cross}
 						alt={'Close'}
 						onClick={() => {
-							closeModal()
+							closeFilterModal()
 						}}
 					/>
 				</div>
@@ -63,6 +83,8 @@ export const ModalFilter = () => {
 													type="checkbox"
 													id={option.id}
 													name={option.name}
+													onChange={handleCheckboxChange}
+													checked={Boolean(unAppliedFilterSettings[option.id])}
 												/>
 												<label htmlFor={option.id}>{option.name}</label>
 											</div>
@@ -76,14 +98,20 @@ export const ModalFilter = () => {
 				<div className={'flex justify-between items-center pt-4'}>
 					<hr className={'border-t-2 border-gray-500 pb-8'} />
 					<button
-						className={'bg-orange-500 text-white py-2 px-4 rounded'}
-						onClick={() => {}}
+						className={
+							'bg-orange-500 text-white rounded-[10px] px-[60px] py-[20px] mx-[16px] transform hover:scale-110 transition cursor-pointer'
+						}
+						onClick={() => {
+							applyHandler()
+						}}
 					>
 						{t('Apply')}
 					</button>
 					<span
 						className={'underline text-blue-500 cursor-pointer'}
-						onClick={() => {}}
+						onClick={() => {
+							clearUnAppliedFilterSettings()
+						}}
 					>
 						{t('Clear all parameters')}
 					</span>

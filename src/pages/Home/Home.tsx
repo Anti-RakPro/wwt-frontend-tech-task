@@ -3,14 +3,20 @@ import ReactDOM from 'react-dom'
 import { useTranslation } from 'react-i18next'
 
 import { ModalFilter } from '@/pages/Filter/Filter'
-import { useFilterModal } from '@/store/store.ts'
+import FilterRecheck from '@/pages/Filter/FilterRecheck.tsx'
+import {
+	useAppliedFilterSettings,
+	useFilterModal,
+	useFilterRecheck
+} from '@/store/store.ts'
 
 const Home = () => {
 	const { t } = useTranslation()
-	const { isOpen, openModal } = useFilterModal()
-
+	const { statusFilterModal, openFilterModal } = useFilterModal()
+	const { statusFilterRecheck } = useFilterRecheck()
+	const { appliedFilterSettings } = useAppliedFilterSettings()
 	const setOpenHandler = () => {
-		openModal()
+		openFilterModal()
 	}
 
 	return (
@@ -22,18 +28,33 @@ const Home = () => {
 				</h1>
 				<button
 					type="button"
-					className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+					className={
+						'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 transform hover:scale-110 transition cursor-pointer'
+					}
 					onClick={() => {
 						setOpenHandler()
 					}}
 				>
 					{t('Filter')}
 				</button>
+				{Object.keys(appliedFilterSettings).length !== 0 && (
+					<div>
+						<h2>{t('Filter data:')}</h2>
+						<pre>{JSON.stringify(appliedFilterSettings, null, 2)}</pre>
+					</div>
+				)}
 			</section>
-			{isOpen &&
+
+			{statusFilterModal &&
 				document.getElementById('modal-main') !== null &&
 				ReactDOM.createPortal(
 					<ModalFilter />,
+					document.getElementById('modal-main')!
+				)}
+			{statusFilterRecheck &&
+				document.getElementById('modal-main') !== null &&
+				ReactDOM.createPortal(
+					<FilterRecheck />,
 					document.getElementById('modal-main')!
 				)}
 		</React.Fragment>
