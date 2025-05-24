@@ -38,13 +38,13 @@ export const ModalFilter = () => {
 		e: React.ChangeEvent<HTMLInputElement>,
 		parentId: string
 	) => {
-		const { id, checked } = e.target
-		setUnAppliedFilterSettings(parentId, id, checked)
+		const { id: optionId, checked } = e.target
+		setUnAppliedFilterSettings(parentId, optionId, checked)
 	}
 
-	const handleCheck = (parentId: string, id: string): boolean => {
+	const handleCheck = (parentId: string, optionId: string): boolean => {
 		const parent = unAppliedFilterSettings.find(item => item.id === parentId)
-		return parent ? parent.optionsIds.includes(id) : false
+		return parent ? parent.optionsIds.includes(optionId) : false
 	}
 
 	return (

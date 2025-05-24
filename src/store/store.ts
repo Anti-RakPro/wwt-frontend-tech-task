@@ -2,10 +2,7 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
 import { FilterType } from '@/shared/api/types/Filter/index.ts'
-import {
-	SearchRequestFilter,
-	SearchRequestOptions
-} from '@/shared/api/types/SearchRequest/SearchRequestFilter.ts'
+import { SearchRequestOptions } from '@/shared/api/types/SearchRequest/SearchRequestFilter.ts'
 import {
 	FilterModalType,
 	FilterRecheckType,
@@ -27,63 +24,65 @@ export const useFilterRecheck = create<FilterRecheckType>()(set => ({
 
 export const useUnAppliedFilterSettings =
 	create<UseUnAppliedFilterSettingsTypes>()(
-		immer<UseUnAppliedFilterSettingsTypes>(set => ({
-			unAppliedFilterSettings: [] as SearchRequestFilter,
-			setUnAppliedFilterSettings: (
-				objId: string,
-				optionId: string,
-				checked: boolean
-			) => {
-				set(state => {
-					const updatedFilters = state.unAppliedFilterSettings
-						.map(filter => {
-							if (filter.id === objId) {
-								const updatedOptions = checked
-									? filter.optionsIds.includes(optionId)
-										? filter.optionsIds
-										: [...filter.optionsIds, optionId]
-									: filter.optionsIds.filter(
-											optionIdItem => optionIdItem !== optionId
-										)
+		immer(set => {
+			return {
+				unAppliedFilterSettings: [],
+				setUnAppliedFilterSettings: (objId, optionId, checked) => {
+					set(state => {
+						const existingFilter = state.unAppliedFilterSettings.find(
+							filter => filter.id === objId
+						)
+
+						let updatedFilters = state.unAppliedFilterSettings
+							.map(filter => {
+								if (filter.id !== objId) {
+									return filter
+								}
+								const alreadySelected = filter.optionsIds.includes(optionId)
+								let updatedOptions
+
+								if (checked) {
+									if (alreadySelected) {
+										updatedOptions = filter.optionsIds
+									} else {
+										updatedOptions = [...filter.optionsIds, optionId]
+									}
+								} else {
+									updatedOptions = filter.optionsIds.filter(
+										id => id !== optionId
+									)
+								}
 
 								return { ...filter, optionsIds: updatedOptions }
-							}
-							return filter
-						})
-						.filter(filter => filter.optionsIds.length > 0) // Remove filters with empty optionsIds
+							})
+							.filter(filter => filter.optionsIds.length > 0)
 
-					if (
-						!state.unAppliedFilterSettings.some(
-							filter => filter.id === objId
-						) &&
-						checked
-					) {
-						state.unAppliedFilterSettings = [
-							...updatedFilters,
-							{
+						const isFilterMissing = !existingFilter && checked
+
+						if (isFilterMissing) {
+							const newFilter: SearchRequestOptions = {
 								id: objId,
 								type: FilterType.OPTION,
 								optionsIds: [optionId]
-							} as SearchRequestOptions
-						]
-					} else {
+							}
+							updatedFilters = [...updatedFilters, newFilter]
+						}
+
 						state.unAppliedFilterSettings = updatedFilters
-					}
-					console.log(state.unAppliedFilterSettings)
-				})
-			},
-			clearUnAppliedFilterSettings: () => {
-				set(state => {
-					state.unAppliedFilterSettings = []
-				})
+					})
+				},
+				clearUnAppliedFilterSettings: () => {
+					set(state => {
+						state.unAppliedFilterSettings = []
+					})
+				}
 			}
-		}))
+		})
 	)
 
 export const useAppliedFilterSettings = create<useAppliedFilterSettingsTypes>()(
 	immer(set => ({
-		appliedFilterSettings: [] as SearchRequestFilter,
-		setAppliedFilterSettings: (obj: SearchRequestFilter) =>
-			set({ appliedFilterSettings: obj })
+		appliedFilterSettings: [],
+		setAppliedFilterSettings: arr => set({ appliedFilterSettings: arr })
 	}))
 )

@@ -13,13 +13,13 @@ export type FilterRecheckType = {
 export type UseUnAppliedFilterSettingsTypes = {
 	unAppliedFilterSettings: SearchRequestFilter
 	setUnAppliedFilterSettings: (
-		parentId: string,
-		id: string,
+		objId: string,
+		optionId: string,
 		checked: boolean
 	) => void
 	clearUnAppliedFilterSettings: () => void
 }
 export type useAppliedFilterSettingsTypes = {
 	appliedFilterSettings: SearchRequestFilter
-	setAppliedFilterSettings: (obj: SearchRequestFilter) => void
+	setAppliedFilterSettings: (arr: SearchRequestFilter) => void
 }
