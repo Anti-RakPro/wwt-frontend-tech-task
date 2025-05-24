@@ -14,6 +14,7 @@ export const ModalFilter = () => {
 	const { t } = useTranslation()
 	const { closeFilterModal } = useFilterModal()
 	const { openFilterRecheck } = useFilterRecheck()
+
 	const {
 		unAppliedFilterSettings,
 		setUnAppliedFilterSettings,
@@ -33,9 +34,17 @@ export const ModalFilter = () => {
 		openFilterRecheck()
 	}
 
-	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleCheckboxChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		parentId: string
+	) => {
 		const { id, checked } = e.target
-		setUnAppliedFilterSettings(id, checked)
+		setUnAppliedFilterSettings(parentId, id, checked)
+	}
+
+	const handleCheck = (parentId: string, id: string): boolean => {
+		const parent = unAppliedFilterSettings.find(item => item.id === parentId)
+		return parent ? parent.optionsIds.includes(id) : false
 	}
 
 	return (
@@ -83,8 +92,10 @@ export const ModalFilter = () => {
 													type="checkbox"
 													id={option.id}
 													name={option.name}
-													onChange={handleCheckboxChange}
-													checked={Boolean(unAppliedFilterSettings[option.id])}
+													onChange={e => {
+														handleCheckboxChange(e, item.id)
+													}}
+													checked={handleCheck(item.id, option.id)}
 												/>
 												<label htmlFor={option.id}>{option.name}</label>
 											</div>
