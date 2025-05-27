@@ -34,7 +34,7 @@ module.exports = {
 					'ImportDeclaration[source.value=/\\u002Esvg/] ImportDefaultSpecifier[local.name!=/Icon/]',
 				message:
 					'Not allowed to import SVG icons as components without the "Icon" suffix at the end.'
-			},
+			}
 			// {
 			// 	selector:
 			// 		'ImportDeclaration[source.value=/@\\u002F(api|assets|components|constants|pages|providers|store|temp|types|utils)/]',

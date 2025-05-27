@@ -119,7 +119,7 @@ export const ModalFilter = () => {
 						{t('Apply')}
 					</button>
 					<span
-						className={'underline text-blue-500 cursor-pointer'}
+						className={'underline text-black cursor-pointer'}
 						onClick={() => {
 							clearUnAppliedFilterSettings()
 						}}
